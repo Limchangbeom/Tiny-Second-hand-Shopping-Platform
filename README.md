@@ -52,7 +52,7 @@ GitHub에 public 저장소를 올린 뒤 Ubuntu VM에서 클론합니다.
 
 ```bash
 git clone https://github.com/Limchangbeom/Tiny-Second-hand-Shopping-Platform.git
-cd Tiny-Second-hand-Shopping-Platform
+cd Tiny-Second-hand-shopping-Platform
 cd 'tiny-second-hand-shopping-platform(V2)'
 ```
 
