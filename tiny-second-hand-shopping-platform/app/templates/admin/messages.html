@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}메시지 관리{% endblock %}
+{% block content %}
+<section class="section-head compact">
+    <div>
+        <span class="eyebrow">Admin Messages</span>
+        <h2>메시지 관리</h2>
+    </div>
+</section>
+
+<section class="table-card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>시간</th>
+                <th>유형</th>
+                <th>발신자</th>
+                <th>내용</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in messages %}
+                <tr>
+                    <td>{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ message.room_type }}</td>
+                    <td>{{ message.sender.display_name }}</td>
+                    <td>{{ message.body }}</td>
+                    <td class="action-row">
+                        {% if message.is_removed %}
+                            <form method="post" action="{{ url_for('admin.message_action', message_id=message.id, action='restore') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-secondary btn-small" type="submit">복구</button></form>
+                        {% else %}
+                            <form method="post" action="{{ url_for('admin.message_action', message_id=message.id, action='remove') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-danger btn-small" type="submit">숨김</button></form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">메시지가 없습니다.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

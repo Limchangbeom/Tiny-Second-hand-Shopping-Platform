@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}신고 관리{% endblock %}
+{% block content %}
+<section class="section-head compact">
+    <div>
+        <span class="eyebrow">Admin Reports</span>
+        <h2>신고 관리</h2>
+    </div>
+</section>
+
+<section class="table-card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>유형</th>
+                <th>신고자</th>
+                <th>사유</th>
+                <th>상태</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+                <tr>
+                    <td>#{{ report.id }}</td>
+                    <td>{{ report.target_type }}</td>
+                    <td>{{ report.reporter.display_name }}</td>
+                    <td>{{ report.reason }}</td>
+                    <td>{{ report.status }}</td>
+                    <td class="action-row">
+                        {% if report.status == 'open' %}
+                            <form method="post" action="{{ url_for('admin.report_action', report_id=report.id, action='resolve') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-primary btn-small" type="submit">처리 완료</button></form>
+                        {% else %}
+                            <form method="post" action="{{ url_for('admin.report_action', report_id=report.id, action='reopen') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-secondary btn-small" type="submit">재오픈</button></form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6">신고가 없습니다.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}{{ profile_user.display_name }} 프로필{% endblock %}
+{% block content %}
+<section class="detail-hero">
+    <div>
+        <span class="eyebrow">User Profile</span>
+        <h2>{{ profile_user.display_name }}</h2>
+        <p class="muted">@{{ profile_user.username }}</p>
+        <p>{{ (profile_user.bio or '소개글이 없습니다.')|safe }}</p>
+        <div class="hero-actions">
+            {% if current_user.is_authenticated and current_user.id != profile_user.id %}
+                <a class="btn btn-primary" href="{{ url_for('chat.direct_chat', user_id=profile_user.id) }}">1대1 채팅</a>
+                <a class="btn btn-secondary" href="{{ url_for('reports.create_report', target_type='user', target_id=profile_user.id) }}">사용자 신고</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="detail-sidecard">
+        <p><strong>잔액</strong></p>
+        {% if current_user.is_authenticated and (current_user.id == profile_user.id or current_user.is_admin) %}
+            <h3>{{ profile_user.balance }} 원</h3>
+        {% else %}
+            <h3>비공개</h3>
+        {% endif %}
+        {% if profile_user.is_admin %}<span class="badge badge-danger">관리자</span>{% endif %}
+        {% if profile_user.is_suspended %}<span class="badge badge-warning">정지 계정</span>{% endif %}
+    </div>
+</section>
+
+<section class="section-head compact">
+    <div>
+        <span class="eyebrow">User Listings</span>
+        <h3>등록 상품</h3>
+    </div>
+</section>
+
+<section class="card-grid product-grid">
+    {% for product in products %}
+        <article class="product-card compact-card">
+            <div class="card-body">
+                <span class="badge badge-soft">{{ product.category }}</span>
+                <h3><a href="{{ url_for('products.detail', product_id=product.id) }}">{{ product.title }}</a></h3>
+                <p>{{ product.status }}</p>
+                <div class="card-meta">
+                    <span>{{ product.created_at.strftime('%Y-%m-%d') }}</span>
+                    <strong>{{ product.price }} 원</strong>
+                </div>
+            </div>
+        </article>
+    {% else %}
+        <article class="empty-card"><h3>등록된 상품이 없습니다.</h3></article>
+    {% endfor %}
+</section>
+{% endblock %}

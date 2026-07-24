@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}사용자 목록{% endblock %}
+{% block content %}
+<section class="section-head">
+    <div>
+        <span class="eyebrow">User Directory</span>
+        <h2>사용자 조회</h2>
+    </div>
+</section>
+
+<form method="get" class="toolbar">
+    <input class="input" type="text" name="q" value="{{ keyword }}" placeholder="아이디 또는 표시 이름 검색">
+    <button class="btn btn-primary" type="submit">검색</button>
+</form>
+
+<section class="card-grid user-grid">
+    {% for user in users %}
+        <article class="user-card">
+            <div>
+                <div class="user-name-row">
+                    <h3><a href="{{ url_for('main.user_detail', user_id=user.id) }}">{{ user.display_name }}</a></h3>
+                    {% if user.is_admin %}<span class="badge badge-danger">ADMIN</span>{% endif %}
+                    {% if user.is_suspended %}<span class="badge badge-warning">정지</span>{% endif %}
+                </div>
+                <p class="muted">@{{ user.username }}</p>
+                <p>{{ user.bio or '소개글이 없습니다.' }}</p>
+            </div>
+            {% if current_user.is_authenticated and current_user.id != user.id %}
+                <a class="btn btn-secondary" href="{{ url_for('chat.direct_chat', user_id=user.id) }}">1대1 채팅</a>
+            {% endif %}
+        </article>
+    {% else %}
+        <article class="empty-card">
+            <h3>검색 결과가 없습니다.</h3>
+        </article>
+    {% endfor %}
+</section>
+{% endblock %}

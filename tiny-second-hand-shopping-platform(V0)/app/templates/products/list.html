@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}상품 목록{% endblock %}
+{% block content %}
+<section class="section-head">
+    <div>
+        <span class="eyebrow">Marketplace</span>
+        <h2>상품 검색 및 조회</h2>
+    </div>
+    {% if current_user.is_authenticated %}
+        <a class="btn btn-primary" href="{{ url_for('products.create_product') }}">새 상품 등록</a>
+    {% endif %}
+</section>
+
+<form method="get" class="toolbar toolbar-wrap">
+    <input class="input grow" type="text" name="q" value="{{ keyword }}" placeholder="상품명, 설명, 카테고리, 판매자 검색">
+    <select class="input" name="status">
+        <option value="">모든 상태</option>
+        <option value="available" {% if status == 'available' %}selected{% endif %}>판매중</option>
+        <option value="reserved" {% if status == 'reserved' %}selected{% endif %}>예약중</option>
+        <option value="sold" {% if status == 'sold' %}selected{% endif %}>판매완료</option>
+    </select>
+    <button class="btn btn-primary" type="submit">검색</button>
+</form>
+
+<section class="card-grid product-grid">
+    {% for product in products %}
+        <article class="product-card">
+            <a href="{{ url_for('products.detail', product_id=product.id) }}" class="product-image-link">
+                {% if product.image_filename %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ product.image_filename) }}" alt="{{ product.title }} 이미지" class="product-image">
+                {% else %}
+                    <div class="product-placeholder">{{ product.title[:1] }}</div>
+                {% endif %}
+            </a>
+            <div class="card-body">
+                <div class="badge-row">
+                    <span class="badge badge-soft">{{ product.category }}</span>
+                    <span class="badge">{{ product.status }}</span>
+                </div>
+                <h3><a href="{{ url_for('products.detail', product_id=product.id) }}">{{ product.title }}</a></h3>
+                <p>{{ product.description[:100] }}{% if product.description|length > 100 %}...{% endif %}</p>
+                <div class="card-meta">
+                    <span>{{ product.seller.display_name }}</span>
+                    <strong>{{ product.price }} 원</strong>
+                </div>
+            </div>
+        </article>
+    {% else %}
+        <article class="empty-card">
+            <h3>조건에 맞는 상품이 없습니다.</h3>
+        </article>
+    {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}로그인{% endblock %}
+{% block content %}
+<section class="form-shell narrow-shell">
+    <div class="section-head compact">
+        <div>
+            <span class="eyebrow">Account Access</span>
+            <h2>로그인</h2>
+        </div>
+    </div>
+    <form method="post" class="form-card">
+        {{ form.hidden_tag() }}
+        <label>{{ form.username.label }} {{ form.username(class_='input') }}</label>
+        {% for error in form.username.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        <label>{{ form.password.label }} {{ form.password(class_='input') }}</label>
+        {% for error in form.password.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        {{ form.submit(class_='btn btn-primary full-width') }}
+        <p class="helper-text">계정이 없다면 <a href="{{ url_for('auth.register') }}">회원가입</a>으로 이동하세요.</p>
+    </form>
+</section>
+{% endblock %}
