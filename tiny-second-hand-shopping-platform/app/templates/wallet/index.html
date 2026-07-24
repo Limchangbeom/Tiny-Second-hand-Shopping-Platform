@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}지갑 및 송금{% endblock %}
+{% block content %}
+<section class="wallet-grid">
+    <article class="detail-sidecard wallet-balance">
+        <span class="eyebrow">Wallet</span>
+        <h2>{{ current_user.balance }} 원</h2>
+        <p>사용자 간 송금을 지원합니다.</p>
+    </article>
+    <article class="form-card">
+        <h3>송금</h3>
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <label>{{ form.recipient_username.label }} {{ form.recipient_username(class_='input') }}</label>
+            {% for error in form.recipient_username.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            <label>{{ form.amount.label }} {{ form.amount(class_='input') }}</label>
+            {% for error in form.amount.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            <label>{{ form.note.label }} {{ form.note(class_='input') }}</label>
+            {% for error in form.note.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            {{ form.submit(class_='btn btn-primary') }}
+        </form>
+    </article>
+</section>
+
+<section class="section-head compact">
+    <div>
+        <span class="eyebrow">Transaction History</span>
+        <h3>최근 송금 내역</h3>
+    </div>
+</section>
+
+<section class="table-card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>시간</th>
+                <th>구분</th>
+                <th>상대</th>
+                <th>금액</th>
+                <th>메모</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transfer in transactions %}
+                <tr>
+                    <td>{{ transfer.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    {% if transfer.sender_id == current_user.id %}
+                        <td><span class="badge badge-warning">보냄</span></td>
+                        <td>{{ transfer.recipient.display_name }}</td>
+                        <td>- {{ transfer.amount }} 원</td>
+                    {% else %}
+                        <td><span class="badge badge-soft">받음</span></td>
+                        <td>{{ transfer.sender.display_name }}</td>
+                        <td>+ {{ transfer.amount }} 원</td>
+                    {% endif %}
+                    <td>{{ transfer.note or '-' }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">송금 내역이 없습니다.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

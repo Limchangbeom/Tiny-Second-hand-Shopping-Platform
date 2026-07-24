@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}송금 기록{% endblock %}
+{% block content %}
+<section class="section-head compact">
+    <div>
+        <span class="eyebrow">Admin Transfers</span>
+        <h2>송금 기록</h2>
+    </div>
+</section>
+
+<section class="table-card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>시간</th>
+                <th>보낸 사람</th>
+                <th>받는 사람</th>
+                <th>금액</th>
+                <th>메모</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transfer in transfers %}
+                <tr>
+                    <td>{{ transfer.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ transfer.sender.display_name }}</td>
+                    <td>{{ transfer.recipient.display_name }}</td>
+                    <td>{{ transfer.amount }} 원</td>
+                    <td>{{ transfer.note or '-' }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">송금 기록이 없습니다.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

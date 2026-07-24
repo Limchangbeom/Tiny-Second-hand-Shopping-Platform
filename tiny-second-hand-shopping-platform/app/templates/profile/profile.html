@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}내 프로필{% endblock %}
+{% block content %}
+<section class="form-shell">
+    <div class="section-head compact">
+        <div>
+            <span class="eyebrow">My Profile</span>
+            <h2>프로필 수정</h2>
+        </div>
+    </div>
+    {% if updated %}
+        <div class="inline-notice success">프로필이 저장되었습니다.</div>
+    {% endif %}
+    <form method="post" class="form-card">
+        {{ form.hidden_tag() }}
+        <label>아이디 <input class="input" value="{{ current_user.username }}" disabled></label>
+        <label>{{ form.display_name.label }} {{ form.display_name(class_='input') }}</label>
+        {% for error in form.display_name.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        <label>{{ form.bio.label }} {{ form.bio(class_='textarea', rows='4') }}</label>
+        {% for error in form.bio.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        <label>{{ form.new_password.label }} {{ form.new_password(class_='input') }}</label>
+        {% for error in form.new_password.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        <label>{{ form.confirm_new_password.label }} {{ form.confirm_new_password(class_='input') }}</label>
+        {% for error in form.confirm_new_password.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        {{ form.submit(class_='btn btn-primary') }}
+    </form>
+
+    {% if not current_user.is_admin %}
+        <section class="form-card danger-panel">
+            <h3>회원 탈퇴</h3>
+            <p class="muted">탈퇴 시 계정은 비활성화되고 등록한 상품은 자동으로 내려갑니다.</p>
+            <a class="btn btn-danger" href="{{ url_for('main.withdraw') }}">탈퇴 진행</a>
+        </section>
+    {% endif %}
+</section>
+{% endblock %}

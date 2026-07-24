@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}사용자 관리{% endblock %}
+{% block content %}
+<section class="section-head compact">
+    <div>
+        <span class="eyebrow">Admin Users</span>
+        <h2>사용자 관리</h2>
+    </div>
+</section>
+
+<form method="get" class="toolbar">
+    <input class="input grow" type="text" name="q" value="{{ keyword }}" placeholder="아이디 또는 표시 이름 검색">
+    <button class="btn btn-primary" type="submit">검색</button>
+</form>
+
+<section class="table-card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>사용자</th>
+                <th>상태</th>
+                <th>권한</th>
+                <th>잔액</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.display_name }} <span class="muted">@{{ user.username }}</span></td>
+                    <td>{% if user.is_deleted %}탈퇴{% elif user.is_suspended %}정지{% else %}활성{% endif %}</td>
+                    <td>{% if user.is_admin %}관리자{% else %}일반{% endif %}</td>
+                    <td>{{ user.balance }} 원</td>
+                    <td class="action-row">
+                        {% if user.is_deleted %}
+                            <span class="badge badge-warning">탈퇴 완료</span>
+                        {% elif user.is_suspended %}
+                            <form method="post" action="{{ url_for('admin.user_action', user_id=user.id, action='reactivate') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-secondary btn-small" type="submit">복구</button></form>
+                        {% else %}
+                            <form method="post" action="{{ url_for('admin.user_action', user_id=user.id, action='suspend') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-danger btn-small" type="submit">정지</button></form>
+                        {% endif %}
+                        {% if user.is_deleted %}
+                        {% elif user.is_admin %}
+                            <form method="post" action="{{ url_for('admin.user_action', user_id=user.id, action='demote') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-secondary btn-small" type="submit">권한 해제</button></form>
+                        {% else %}
+                            <form method="post" action="{{ url_for('admin.user_action', user_id=user.id, action='promote') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-primary btn-small" type="submit">관리자 승격</button></form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">사용자가 없습니다.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<section class="form-shell">
+    <div class="section-head compact">
+        <div>
+            <span class="eyebrow">Product Editor</span>
+            <h2>{{ title }}</h2>
+        </div>
+    </div>
+    <form method="post" enctype="multipart/form-data" class="form-card">
+        {{ form.hidden_tag() }}
+        <label>{{ form.title.label }} {{ form.title(class_='input') }}</label>
+        {% for error in form.title.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        <label>{{ form.category.label }} {{ form.category(class_='input') }}</label>
+        {% for error in form.category.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        <label>{{ form.description.label }} {{ form.description(class_='textarea', rows='6') }}</label>
+        {% for error in form.description.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        <div class="two-column-form">
+            <label>{{ form.price.label }} {{ form.price(class_='input') }}</label>
+            <label>{{ form.status.label }} {{ form.status(class_='input') }}</label>
+        </div>
+        {% for error in form.price.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        {% for error in form.status.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        <label>{{ form.image.label }} {{ form.image(class_='input') }}</label>
+        {% for error in form.image.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        {{ form.submit(class_='btn btn-primary') }}
+    </form>
+</section>
+{% endblock %}
