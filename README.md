@@ -53,7 +53,7 @@ GitHub에 public 저장소를 올린 뒤 Ubuntu VM에서 클론합니다.
 ```bash
 git clone https://github.com/Limchangbeom/Tiny-Second-hand-Shopping-Platform.git
 cd Tiny-Second-hand-Shopping-Platform
-cd 'tiny-secon-hand-shopping-platform(V2)'
+cd 'tiny-second-hand-shopping-platform(V2)'
 ```
 
 ### 3) 가상환경 및 의존성 설치
