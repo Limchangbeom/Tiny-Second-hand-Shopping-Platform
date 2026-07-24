@@ -77,6 +77,7 @@ ngrok을 사용할 때 권장 설정 예시:
 
 ```bash
 export SECRET_KEY="replace-this-with-a-long-random-secret"
+export DATABASE_URL=sqlite:///instance/market.db
 export ADMIN_USERNAME="admin"
 export ADMIN_PASSWORD="StrongAdminPass123!"
 export SESSION_COOKIE_SECURE=1
