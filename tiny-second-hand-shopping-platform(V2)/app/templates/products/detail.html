@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.title }}{% endblock %}
+{% block content %}
+<section class="product-detail-grid">
+    <article class="media-panel">
+        {% if product.image_filename %}
+            <img src="{{ url_for('static', filename='uploads/' ~ product.image_filename) }}" alt="{{ product.title }} 이미지" class="detail-image">
+        {% else %}
+            <div class="detail-placeholder">{{ product.title[:1] }}</div>
+        {% endif %}
+    </article>
+    <article class="detail-panel">
+        <div class="badge-row">
+            <span class="badge badge-soft">{{ product.category }}</span>
+            <span class="badge">{{ product.status }}</span>
+            <span class="badge">찜 {{ favorite_counts.get(product.id, 0) }}</span>
+            {% if product.is_blocked %}<span class="badge badge-warning">차단 상품</span>{% endif %}
+            {% if product.is_deleted %}<span class="badge badge-danger">삭제 처리</span>{% endif %}
+        </div>
+        <h2>{{ product.title }}</h2>
+        <p class="detail-price">{{ product.price }} 원</p>
+        <p class="detail-description">{{ product.description }}</p>
+        <div class="detail-meta">
+            <span>판매자: <a href="{{ url_for('main.user_detail', user_id=product.seller.id) }}">{{ product.seller.display_name }}</a></span>
+            <span>등록일: {{ product.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+        </div>
+        <div class="hero-actions wrap-actions">
+            {% if current_user.is_authenticated and current_user.id != product.seller_id %}
+                <a class="btn btn-primary" href="{{ url_for('chat.direct_chat', user_id=product.seller_id) }}">판매자와 채팅</a>
+                <form method="post" action="{{ url_for('products.toggle_favorite', product_id=product.id) }}" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="btn btn-secondary" type="submit">{% if product.id in favorite_product_ids %}찜 해제{% else %}찜하기{% endif %}</button>
+                </form>
+                <a class="btn btn-secondary" href="{{ url_for('reports.create_report', target_type='product', target_id=product.id) }}">상품 신고</a>
+                <a class="btn btn-secondary" href="{{ url_for('reports.create_report', target_type='user', target_id=product.seller_id) }}">판매자 신고</a>
+            {% endif %}
+            {% if current_user.is_authenticated and (current_user.id == product.seller_id or current_user.is_admin) %}
+                <a class="btn btn-secondary" href="{{ url_for('products.edit', product_id=product.id) }}">상품 수정</a>
+                <form method="post" action="{{ url_for('products.delete', product_id=product.id) }}" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-danger" type="submit">상품 삭제</button>
+                </form>
+            {% endif %}
+        </div>
+    </article>
+</section>
+{% endblock %}

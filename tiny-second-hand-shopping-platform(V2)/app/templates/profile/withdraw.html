@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}회원 탈퇴{% endblock %}
+{% block content %}
+<section class="form-shell narrow-shell">
+    <div class="section-head compact">
+        <div>
+            <span class="eyebrow">Account Withdrawal</span>
+            <h2>회원 탈퇴</h2>
+        </div>
+    </div>
+
+    <div class="inline-notice warning">
+        탈퇴 후에는 같은 계정으로 다시 로그인할 수 없고, 등록한 상품은 자동으로 비공개 처리됩니다.
+    </div>
+
+    <form method="post" class="form-card">
+        {{ form.hidden_tag() }}
+        <label>{{ form.password.label }} {{ form.password(class_='input') }}</label>
+        {% for error in form.password.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        <label>{{ form.confirmation.label }} {{ form.confirmation(class_='input', placeholder='탈퇴') }}</label>
+        {% for error in form.confirmation.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        <div class="hero-actions wrap-actions">
+            {{ form.submit(class_='btn btn-danger') }}
+            <a class="btn btn-secondary" href="{{ url_for('main.profile') }}">취소</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

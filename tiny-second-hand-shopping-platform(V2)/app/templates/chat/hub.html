@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}채팅 허브{% endblock %}
+{% block content %}
+<section class="section-head">
+    <div>
+        <span class="eyebrow">Communication</span>
+        <h2>채팅 허브</h2>
+    </div>
+    <a class="btn btn-primary" href="{{ url_for('chat.global_chat') }}">전체 채팅 입장</a>
+</section>
+
+<section class="split-grid">
+    <article class="panel-card">
+        <h3>최근 1대1 대화</h3>
+        <div class="conversation-list">
+            {% for thread in threads %}
+                <a class="conversation-item" href="{{ url_for('chat.direct_chat', user_id=thread.user.id) }}">
+                    <div class="card-meta">
+                        <strong>{{ thread.user.display_name }}</strong>
+                        {% if thread.unread_count %}<span class="badge badge-danger">미확인 {{ thread.unread_count }}</span>{% endif %}
+                    </div>
+                    <span class="muted">@{{ thread.user.username }}</span>
+                    <p>{% if thread.is_last_from_me %}내가 보냄 · {% endif %}{{ thread.last_message.body }}</p>
+                </a>
+            {% else %}
+                <p class="muted">아직 시작한 개인 채팅이 없습니다.</p>
+            {% endfor %}
+        </div>
+    </article>
+    <article class="panel-card">
+        <h3>대화 가능한 사용자</h3>
+        <div class="conversation-list">
+            {% for user in users %}
+                <a class="conversation-item" href="{{ url_for('chat.direct_chat', user_id=user.id) }}">
+                    <strong>{{ user.display_name }}</strong>
+                    <span class="muted">@{{ user.username }}</span>
+                    <p>{% if user.is_suspended %}정지 계정{% else %}1대1 채팅 시작{% endif %}</p>
+                </a>
+            {% else %}
+                <p class="muted">표시할 사용자가 없습니다.</p>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+{% endblock %}

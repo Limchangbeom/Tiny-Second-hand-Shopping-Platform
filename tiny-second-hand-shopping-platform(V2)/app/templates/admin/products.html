@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}상품 관리{% endblock %}
+{% block content %}
+<section class="section-head compact">
+    <div>
+        <span class="eyebrow">Admin Products</span>
+        <h2>상품 관리</h2>
+    </div>
+    <span class="badge">검색 결과 {{ result_count }}</span>
+</section>
+
+<form method="get" class="toolbar toolbar-wrap toolbar-grid">
+    <label class="toolbar-field">
+        <span>검색어</span>
+        <input class="input" type="text" name="q" value="{{ keyword }}" placeholder="상품명, 설명, 카테고리, 판매자 검색">
+    </label>
+    <label class="toolbar-field">
+        <span>판매 상태</span>
+        <select class="input" name="status">
+            <option value="all" {% if status_filter == 'all' %}selected{% endif %}>전체</option>
+            <option value="available" {% if status_filter == 'available' %}selected{% endif %}>판매중</option>
+            <option value="reserved" {% if status_filter == 'reserved' %}selected{% endif %}>예약중</option>
+            <option value="sold" {% if status_filter == 'sold' %}selected{% endif %}>판매완료</option>
+        </select>
+    </label>
+    <label class="toolbar-field">
+        <span>운영 상태</span>
+        <select class="input" name="state">
+            <option value="all" {% if state_filter == 'all' %}selected{% endif %}>전체</option>
+            <option value="active" {% if state_filter == 'active' %}selected{% endif %}>정상</option>
+            <option value="blocked" {% if state_filter == 'blocked' %}selected{% endif %}>차단</option>
+            <option value="deleted" {% if state_filter == 'deleted' %}selected{% endif %}>삭제</option>
+            <option value="flagged" {% if state_filter == 'flagged' %}selected{% endif %}>차단/삭제 포함</option>
+        </select>
+    </label>
+    <label class="toolbar-field">
+        <span>정렬</span>
+        <select class="input" name="sort">
+            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>최신 등록순</option>
+            <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>오래된 등록순</option>
+            <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>가격 높은 순</option>
+            <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>가격 낮은 순</option>
+        </select>
+    </label>
+    <div class="toolbar-actions">
+        <button class="btn btn-primary" type="submit">검색</button>
+        <a class="btn btn-secondary" href="{{ url_for('admin.products') }}">초기화</a>
+    </div>
+</form>
+
+<section class="table-card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>상품</th>
+                <th>판매자</th>
+                <th>상태</th>
+                <th>찜</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.title }}</td>
+                    <td>{{ product.seller.display_name }}</td>
+                    <td>
+                        {{ product.status }}
+                        {% if product.is_blocked %}<span class="badge badge-warning">차단</span>{% endif %}
+                        {% if product.is_deleted %}<span class="badge badge-danger">삭제</span>{% endif %}
+                    </td>
+                    <td>{{ favorite_counts.get(product.id, 0) }}</td>
+                    <td class="action-row">
+                        {% if product.is_blocked %}
+                            <form method="post" action="{{ url_for('admin.product_action', product_id=product.id, action='unblock') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}"><button class="btn btn-secondary btn-small" type="submit">차단 해제</button></form>
+                        {% else %}
+                            <form method="post" action="{{ url_for('admin.product_action', product_id=product.id, action='block') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}"><button class="btn btn-danger btn-small" type="submit">차단</button></form>
+                        {% endif %}
+                        {% if product.is_deleted %}
+                            <form method="post" action="{{ url_for('admin.product_action', product_id=product.id, action='restore') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}"><button class="btn btn-secondary btn-small" type="submit">복구</button></form>
+                        {% else %}
+                            <form method="post" action="{{ url_for('admin.product_action', product_id=product.id, action='delete') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}"><button class="btn btn-danger btn-small" type="submit">삭제</button></form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">상품이 없습니다.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}홈 - Tiny Second-hand Shopping Platform{% endblock %}
+{% block content %}
+<section class="hero-panel">
+    <div class="hero-cta">
+        <div class="hero-actions">
+            <a class="btn btn-primary" href="{{ url_for('products.product_list') }}">상품 둘러보기</a>
+            {% if current_user.is_authenticated %}
+                <a class="btn btn-secondary" href="{{ url_for('chat.global_chat') }}">전체 채팅 입장</a>
+            {% else %}
+                <a class="btn btn-secondary" href="{{ url_for('auth.register') }}">바로 가입하기</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="hero-grid">
+        <article class="stat-card">
+            <strong>{{ stats.users }}</strong>
+            <span>등록 사용자</span>
+        </article>
+        <article class="stat-card">
+            <strong>{{ stats.products }}</strong>
+            <span>등록 상품</span>
+        </article>
+        <article class="stat-card">
+            <strong>{{ stats.messages }}</strong>
+            <span>누적 메시지</span>
+        </article>
+        <article class="stat-card">
+            <strong>{{ stats.transfers }}</strong>
+            <span>송금 기록</span>
+        </article>
+        <article class="stat-card">
+            <strong>{{ stats.favorites }}</strong>
+            <span>찜 누적</span>
+        </article>
+    </div>
+</section>
+
+<section class="section-head">
+    <div>
+        <span class="eyebrow">Recent Listings</span>
+        <h2>최근 등록된 상품</h2>
+    </div>
+    <a class="text-link" href="{{ url_for('products.product_list') }}">전체 목록 보기</a>
+</section>
+
+<section class="card-grid product-grid">
+    {% for product in products %}
+        <article class="product-card">
+            <a href="{{ url_for('products.detail', product_id=product.id) }}" class="product-image-link">
+                {% if product.image_filename %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ product.image_filename) }}" alt="{{ product.title }} 이미지" class="product-image">
+                {% else %}
+                    <div class="product-placeholder">{{ product.title[:1] }}</div>
+                {% endif %}
+            </a>
+            <div class="card-body">
+                <div class="badge-row">
+                    <span class="badge badge-soft">{{ product.category }}</span>
+                    <span class="badge">찜 {{ favorite_counts.get(product.id, 0) }}</span>
+                </div>
+                <h3><a href="{{ url_for('products.detail', product_id=product.id) }}">{{ product.title }}</a></h3>
+                <p>{{ product.description[:80] }}{% if product.description|length > 80 %}...{% endif %}</p>
+                <div class="card-meta">
+                    <span>{{ product.seller.display_name }}</span>
+                    <strong>{{ product.price }} 원</strong>
+                </div>
+                {% if current_user.is_authenticated and current_user.id != product.seller_id %}
+                    <form method="post" action="{{ url_for('products.toggle_favorite', product_id=product.id) }}" class="inline-form card-inline-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button class="btn btn-secondary btn-small" type="submit">{% if product.id in favorite_product_ids %}찜 해제{% else %}찜하기{% endif %}</button>
+                    </form>
+                {% endif %}
+            </div>
+        </article>
+    {% else %}
+        <article class="empty-card">
+            <h3>등록된 상품이 없습니다.</h3>
+            <p>첫 번째 상품을 등록해보세요.</p>
+        </article>
+    {% endfor %}
+</section>
+{% endblock %}

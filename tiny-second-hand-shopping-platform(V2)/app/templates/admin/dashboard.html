@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}관리자 대시보드{% endblock %}
+{% block content %}
+<section class="section-head">
+    <div>
+        <span class="eyebrow">Administration</span>
+        <h2>관리자 대시보드</h2>
+    </div>
+    <div class="hero-actions wrap-actions">
+        <a class="btn btn-secondary" href="{{ url_for('admin.users') }}">사용자 관리</a>
+        <a class="btn btn-secondary" href="{{ url_for('admin.products') }}">상품 관리</a>
+        <a class="btn btn-secondary" href="{{ url_for('admin.reports') }}">신고 관리</a>
+        <a class="btn btn-secondary" href="{{ url_for('admin.messages') }}">메시지 관리</a>
+        <a class="btn btn-secondary" href="{{ url_for('admin.transactions') }}">송금 기록</a>
+    </div>
+</section>
+
+<section class="hero-grid admin-grid">
+    {% set stat_labels = {
+        'users': '전체 사용자',
+        'suspended_users': '정지 계정',
+        'products': '등록 상품',
+        'blocked_products': '차단 상품',
+        'open_reports': '열린 신고',
+        'messages': '메시지',
+        'transfers': '송금 기록',
+        'favorites': '찜 누적'
+    } %}
+    {% for key, value in stats.items() %}
+        <article class="stat-card">
+            <strong>{{ value }}</strong>
+            <span>{{ stat_labels.get(key, key) }}</span>
+        </article>
+    {% endfor %}
+</section>
+
+<section class="split-grid">
+    <article class="panel-card">
+        <h3>최근 신고</h3>
+        <div class="conversation-list">
+            {% for report in recent_reports %}
+                <div class="conversation-item static-item">
+                    <strong>#{{ report.id }} · {{ report.target_type }}</strong>
+                    <span class="muted">{{ report.status }} · {{ report.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                    <p>{{ report.reason }}</p>
+                </div>
+            {% else %}
+                <p class="muted">신고가 없습니다.</p>
+            {% endfor %}
+        </div>
+    </article>
+    <article class="panel-card">
+        <h3>최근 관리자 로그</h3>
+        <div class="conversation-list">
+            {% for log in recent_logs %}
+                <div class="conversation-item static-item">
+                    <strong>{{ log.action_type }}</strong>
+                    <span class="muted">{{ log.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                    <p>{{ log.target_type }} #{{ log.target_id }} · {{ log.details }}</p>
+                </div>
+            {% else %}
+                <p class="muted">로그가 없습니다.</p>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+{% endblock %}

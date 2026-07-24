@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}메시지 관리{% endblock %}
+{% block content %}
+<section class="section-head compact">
+    <div>
+        <span class="eyebrow">Admin Messages</span>
+        <h2>메시지 관리</h2>
+    </div>
+    <span class="badge">검색 결과 {{ result_count }}</span>
+</section>
+
+<form method="get" class="toolbar toolbar-wrap toolbar-grid">
+    <label class="toolbar-field">
+        <span>검색어</span>
+        <input class="input" type="text" name="q" value="{{ keyword }}" placeholder="내용, 발신자, 수신자 검색">
+    </label>
+    <label class="toolbar-field">
+        <span>유형</span>
+        <select class="input" name="room_type">
+            <option value="all" {% if room_type_filter == 'all' %}selected{% endif %}>전체</option>
+            <option value="global" {% if room_type_filter == 'global' %}selected{% endif %}>전체 채팅</option>
+            <option value="direct" {% if room_type_filter == 'direct' %}selected{% endif %}>1대1 채팅</option>
+        </select>
+    </label>
+    <label class="toolbar-field">
+        <span>노출 상태</span>
+        <select class="input" name="state">
+            <option value="all" {% if state_filter == 'all' %}selected{% endif %}>전체</option>
+            <option value="visible" {% if state_filter == 'visible' %}selected{% endif %}>표시중</option>
+            <option value="removed" {% if state_filter == 'removed' %}selected{% endif %}>숨김</option>
+        </select>
+    </label>
+    <label class="toolbar-field">
+        <span>읽음 상태</span>
+        <select class="input" name="read">
+            <option value="all" {% if read_filter == 'all' %}selected{% endif %}>전체</option>
+            <option value="unread" {% if read_filter == 'unread' %}selected{% endif %}>읽지 않음</option>
+            <option value="read" {% if read_filter == 'read' %}selected{% endif %}>읽음</option>
+        </select>
+    </label>
+    <label class="toolbar-field">
+        <span>정렬</span>
+        <select class="input" name="sort">
+            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>최신순</option>
+            <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>오래된 순</option>
+        </select>
+    </label>
+    <div class="toolbar-actions">
+        <button class="btn btn-primary" type="submit">검색</button>
+        <a class="btn btn-secondary" href="{{ url_for('admin.messages') }}">초기화</a>
+    </div>
+</form>
+
+<section class="table-card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>시간</th>
+                <th>유형</th>
+                <th>발신자</th>
+                <th>수신자</th>
+                <th>읽음</th>
+                <th>내용</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in messages %}
+                <tr>
+                    <td>{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ message.room_type }}</td>
+                    <td>{{ message.sender.display_name }}</td>
+                    <td>{% if message.recipient %}{{ message.recipient.display_name }}{% else %}-{% endif %}</td>
+                    <td>{% if message.room_type == 'direct' %}{% if message.is_read %}읽음{% else %}미확인{% endif %}{% else %}-{% endif %}</td>
+                    <td>{{ message.body }}</td>
+                    <td class="action-row">
+                        {% if message.is_removed %}
+                            <form method="post" action="{{ url_for('admin.message_action', message_id=message.id, action='restore') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}"><button class="btn btn-secondary btn-small" type="submit">복구</button></form>
+                        {% else %}
+                            <form method="post" action="{{ url_for('admin.message_action', message_id=message.id, action='remove') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}"><button class="btn btn-danger btn-small" type="submit">숨김</button></form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="7">메시지가 없습니다.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

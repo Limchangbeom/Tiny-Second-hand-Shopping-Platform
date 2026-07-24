@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}사용자 관리{% endblock %}
+{% block content %}
+<section class="section-head compact">
+    <div>
+        <span class="eyebrow">Admin Users</span>
+        <h2>사용자 관리</h2>
+    </div>
+    <span class="badge">검색 결과 {{ result_count }}</span>
+</section>
+
+<form method="get" class="toolbar toolbar-wrap toolbar-grid">
+    <label class="toolbar-field">
+        <span>검색어</span>
+        <input class="input" type="text" name="q" value="{{ keyword }}" placeholder="아이디, 표시 이름, 소개글 검색">
+    </label>
+    <label class="toolbar-field">
+        <span>상태</span>
+        <select class="input" name="status">
+            <option value="all" {% if status_filter == 'all' %}selected{% endif %}>전체</option>
+            <option value="active" {% if status_filter == 'active' %}selected{% endif %}>활성</option>
+            <option value="suspended" {% if status_filter == 'suspended' %}selected{% endif %}>정지</option>
+            <option value="deleted" {% if status_filter == 'deleted' %}selected{% endif %}>탈퇴</option>
+        </select>
+    </label>
+    <label class="toolbar-field">
+        <span>권한</span>
+        <select class="input" name="role">
+            <option value="all" {% if role_filter == 'all' %}selected{% endif %}>전체</option>
+            <option value="admin" {% if role_filter == 'admin' %}selected{% endif %}>관리자</option>
+            <option value="member" {% if role_filter == 'member' %}selected{% endif %}>일반</option>
+        </select>
+    </label>
+    <label class="toolbar-field">
+        <span>정렬</span>
+        <select class="input" name="sort">
+            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>최신 가입순</option>
+            <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>오래된 가입순</option>
+            <option value="name" {% if sort == 'name' %}selected{% endif %}>이름순</option>
+            <option value="balance_high" {% if sort == 'balance_high' %}selected{% endif %}>잔액 높은 순</option>
+            <option value="balance_low" {% if sort == 'balance_low' %}selected{% endif %}>잔액 낮은 순</option>
+        </select>
+    </label>
+    <div class="toolbar-actions">
+        <button class="btn btn-primary" type="submit">검색</button>
+        <a class="btn btn-secondary" href="{{ url_for('admin.users') }}">초기화</a>
+    </div>
+</form>
+
+<section class="table-card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>사용자</th>
+                <th>상태</th>
+                <th>권한</th>
+                <th>잔액</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.display_name }} <span class="muted">@{{ user.username }}</span></td>
+                    <td>{% if user.is_deleted %}탈퇴{% elif user.is_suspended %}정지{% else %}활성{% endif %}</td>
+                    <td>{% if user.is_admin %}관리자{% else %}일반{% endif %}</td>
+                    <td>{{ user.balance }} 원</td>
+                    <td class="action-row">
+                        {% if user.is_deleted %}
+                            <span class="badge badge-warning">탈퇴 완료</span>
+                        {% elif user.is_suspended %}
+                            <form method="post" action="{{ url_for('admin.user_action', user_id=user.id, action='reactivate') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}"><button class="btn btn-secondary btn-small" type="submit">복구</button></form>
+                        {% else %}
+                            <form method="post" action="{{ url_for('admin.user_action', user_id=user.id, action='suspend') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}"><button class="btn btn-danger btn-small" type="submit">정지</button></form>
+                        {% endif %}
+                        {% if user.is_deleted %}
+                        {% elif user.is_admin %}
+                            <form method="post" action="{{ url_for('admin.user_action', user_id=user.id, action='demote') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}"><button class="btn btn-secondary btn-small" type="submit">권한 해제</button></form>
+                        {% else %}
+                            <form method="post" action="{{ url_for('admin.user_action', user_id=user.id, action='promote') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}"><button class="btn btn-primary btn-small" type="submit">관리자 승격</button></form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">사용자가 없습니다.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

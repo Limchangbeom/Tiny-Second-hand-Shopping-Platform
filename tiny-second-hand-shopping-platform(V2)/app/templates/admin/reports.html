@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}신고 관리{% endblock %}
+{% block content %}
+<section class="section-head compact">
+    <div>
+        <span class="eyebrow">Admin Reports</span>
+        <h2>신고 관리</h2>
+    </div>
+    <span class="badge">검색 결과 {{ result_count }}</span>
+</section>
+
+<form method="get" class="toolbar toolbar-wrap toolbar-grid">
+    <label class="toolbar-field">
+        <span>검색어</span>
+        <input class="input" type="text" name="q" value="{{ keyword }}" placeholder="사유, 신고자, 대상 사용자/상품 검색">
+    </label>
+    <label class="toolbar-field">
+        <span>대상 유형</span>
+        <select class="input" name="target_type">
+            <option value="all" {% if target_type_filter == 'all' %}selected{% endif %}>전체</option>
+            <option value="user" {% if target_type_filter == 'user' %}selected{% endif %}>사용자</option>
+            <option value="product" {% if target_type_filter == 'product' %}selected{% endif %}>상품</option>
+        </select>
+    </label>
+    <label class="toolbar-field">
+        <span>상태</span>
+        <select class="input" name="status">
+            <option value="all" {% if status_filter == 'all' %}selected{% endif %}>전체</option>
+            <option value="open" {% if status_filter == 'open' %}selected{% endif %}>열림</option>
+            <option value="resolved" {% if status_filter == 'resolved' %}selected{% endif %}>해결</option>
+        </select>
+    </label>
+    <label class="toolbar-field">
+        <span>정렬</span>
+        <select class="input" name="sort">
+            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>최신 신고순</option>
+            <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>오래된 신고순</option>
+        </select>
+    </label>
+    <div class="toolbar-actions">
+        <button class="btn btn-primary" type="submit">검색</button>
+        <a class="btn btn-secondary" href="{{ url_for('admin.reports') }}">초기화</a>
+    </div>
+</form>
+
+<section class="table-card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>유형</th>
+                <th>대상</th>
+                <th>신고자</th>
+                <th>사유</th>
+                <th>상태</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+                <tr>
+                    <td>#{{ report.id }}</td>
+                    <td>{{ report.target_type }}</td>
+                    <td>{% if report.target_type == 'product' and report.target_product %}{{ report.target_product.title }}{% elif report.target_user %}{{ report.target_user.display_name }}{% else %}-{% endif %}</td>
+                    <td>{{ report.reporter.display_name }}</td>
+                    <td>{{ report.reason }}</td>
+                    <td>{{ report.status }}</td>
+                    <td class="action-row">
+                        {% if report.status == 'open' %}
+                            <form method="post" action="{{ url_for('admin.report_action', report_id=report.id, action='resolve') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}"><button class="btn btn-primary btn-small" type="submit">처리 완료</button></form>
+                        {% else %}
+                            <form method="post" action="{{ url_for('admin.report_action', report_id=report.id, action='reopen') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}"><button class="btn btn-secondary btn-small" type="submit">재오픈</button></form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="7">신고가 없습니다.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

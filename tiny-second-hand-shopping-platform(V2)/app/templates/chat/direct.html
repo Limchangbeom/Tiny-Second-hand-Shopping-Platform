@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}{{ other_user.display_name }}와의 채팅{% endblock %}
+{% block content %}
+<section class="section-head compact">
+    <div>
+        <span class="eyebrow">Direct Message</span>
+        <h2>{{ other_user.display_name }}와의 1대1 채팅</h2>
+        <p class="muted">@{{ other_user.username }} · 읽음 상태가 자동 반영됩니다.</p>
+    </div>
+    <a class="btn btn-secondary" href="{{ url_for('chat.hub') }}">채팅 허브</a>
+</section>
+
+<section class="chat-layout" data-chat-room="{{ thread_key }}" data-chat-mode="direct" data-current-user-id="{{ current_user.id }}" data-recipient-id="{{ other_user.id }}">
+    <div class="chat-board">
+        <div class="chat-error" data-chat-error></div>
+        <div class="message-list" data-message-list>
+            {% for message in messages %}
+                <article class="message-bubble {% if message.sender_id == current_user.id %}own{% endif %}" data-message-id="{{ message.id }}">
+                    <header>
+                        <strong>{{ message.sender.display_name }}</strong>
+                        <span>{{ message.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                    </header>
+                    <p>{{ message.body }}</p>
+                    {% if message.sender_id == current_user.id %}
+                        <footer class="message-footer">
+                            <span class="message-receipt" data-message-receipt data-message-id="{{ message.id }}">
+                                {% if message.is_read and message.read_at %}
+                                    읽음 · {{ message.read_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                                {% else %}
+                                    읽지 않음
+                                {% endif %}
+                            </span>
+                        </footer>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+        {% if other_user.is_suspended %}
+            <div class="inline-notice warning">상대방 계정이 정지되어 새 메시지를 보낼 수 없습니다.</div>
+        {% else %}
+            <form class="chat-form" data-chat-form>
+                <textarea class="textarea" rows="3" maxlength="400" data-chat-input placeholder="메시지를 입력하세요."></textarea>
+                <button class="btn btn-primary" type="submit">전송</button>
+            </form>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}
