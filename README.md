@@ -78,9 +78,14 @@ cp .env.example .env
 `.env`를 열어서 아래 항목에 맞게 수정합니다.
 
 ngrok을 사용할 때 권장 설정 예시:
+만약 flask가 갑자기 종료당한다면 
+realpath instance/market.db를 검색해서 
+나온 절대경로로 입력하시면 됩니다.
+(아래처럼 말이죠)
 
 ```bash
 export SECRET_KEY="replace-this-with-a-long-random-secret"
+export DATABASE_URL='sqlite:////home/cb0759/Tiny-Second-hand-shopping-Platform/tiny-second-shopping-platform(V2)/instance/market.db'
 export ADMIN_USERNAME="admin"
 export ADMIN_PASSWORD="StrongAdminPass123!"
 export SESSION_COOKIE_SECURE=1
@@ -100,9 +105,14 @@ source .env
 python run.py
 ```
 
+이미 이것 만으로도 웹을 동작 시킬 수 있습니다.
+
 ### 6) ngrok 연결
 
 다른 터미널에서 ngrok 실행:
+참고로 ngrok을 처음 실행한다면 계정 인증을 진행해야 합니다.
+회원가입하고 ngrok config add authtoken <토큰> 을 입력해주세요.
+그리고 아래처럼 실행하시면 됩니다.
 
 ```bash
 ngrok http 5000
