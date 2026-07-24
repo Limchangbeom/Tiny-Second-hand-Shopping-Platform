@@ -200,14 +200,4 @@ python -m unittest discover -s tests
 - 신고 중복 접수 방지
 - 관리자 권한 검사 및 IDOR 방지
 - 안전한 `next` URL 검사
-- SameSite/HttpOnly 쿠키 기본 적용
-
-## 제출용 문서
-
-- 개발 보고서: `REPORT.md`
-- 자동 테스트: `tests/test_app.py`
-
-## 참고
-
-- SQLite를 사용하므로 학습/시연 환경에 적합합니다.
-- 실제 운영 환경에서는 PostgreSQL + Redis(레이트리밋 저장소) + Gunicorn/Eventlet 또는 유사한 구조로 확장하는 것을 권장합니다.
+- SameSite/HttpOnly 쿠키 기본 적용 등등
