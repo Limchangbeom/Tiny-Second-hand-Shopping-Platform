@@ -71,14 +71,7 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-`.env`를 열어서 아래 항목은 꼭 수정하세요.
-
-- `SECRET_KEY`
-- `ADMIN_USERNAME`
-- `ADMIN_PASSWORD`
-- `SESSION_COOKIE_SECURE`
-- `PREFERRED_URL_SCHEME`
-- `SOCKETIO_CORS_ALLOWED_ORIGINS`
+`.env`를 열어서 아래 항목에 맞게 수정합니다.
 
 ngrok을 사용할 때 권장 설정 예시:
 
@@ -87,6 +80,11 @@ export SECRET_KEY="replace-this-with-a-long-random-secret"
 export ADMIN_USERNAME="admin"
 export ADMIN_PASSWORD="StrongAdminPass123!"
 export SESSION_COOKIE_SECURE=1
+export ADMIN_DISPLAY_NAME=Platform Admin
+export PRODUCT_REPORT_THRESHOLD=3
+export USER_REPORT_THRESHOLD=5
+export CHAT_WINDOW_SECONDS=10
+export CHAT_WINDOW_LIMIT=5
 export PREFERRED_URL_SCHEME=https
 export SOCKETIO_CORS_ALLOWED_ORIGINS="https://your-ngrok-domain.ngrok-free.app"
 ```
