@@ -34,22 +34,11 @@ Flask 기반의 소형 중고거래 플랫폼입니다.
     - (2. 기존 관리자/필터링 기능 개선),
     - (3. 상품 찜 기능, 메세지 읽음 표시 기능 추가)
 
+실행방법은 로컬에서 실행하는 방법과 우분투에서 실행하는 방법을 준비했습니다.
+
 ## 로컬 실행 방법
 
-0. 실행시킬 버전의 폴더로 이동
-
-- V0를 실행시키고 싶은 경우
-```bash
-cd /Tiny-Second-hand-Shopping-Platform/Tiny-Second-hand-Shopping-Platform(V0)
-```
-- V0를 보완한 버전을 실행시키고 싶은 경우
-```bash
-cd /Tiny-Second-hand-Shopping-Platform/Tiny-Second-hand-Shopping-Platform
-```
-- V2를 실행시키고 싶은 경우 (추천)
-```bash
-cd /Tiny-Second-hand-Shopping-Platform/Tiny-Second-hand-Shopping-Platform(V2)
-```
+0. ZIP으로 다운로드 후 압축해제, 실행시킬 버전의 폴더로 이동, cmd로 들어가기
 
 1. Python 가상환경 생성
 
