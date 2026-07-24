@@ -39,6 +39,7 @@ Flask 기반의 소형 중고거래 플랫폼입니다.
 ## 로컬 실행 방법
 
 0. ZIP으로 다운로드 후 압축해제, 실행시킬 버전의 폴더로 이동, cmd로 들어가기
+ - python, pip 등이 제대로 설치되어 있어야 합니다.  
 
 1. Python 가상환경 생성
 
@@ -59,6 +60,7 @@ python -m venv .venv
 ```bash
 source .venv/bin/activate
 ```
+
 
 3. 의존성 설치
 
@@ -103,6 +105,9 @@ python run.py
 ```text
 http://127.0.0.1:5000
 ```
+
+
+
 
 ## Ubuntu VM + ngrok 실행 방법
 
