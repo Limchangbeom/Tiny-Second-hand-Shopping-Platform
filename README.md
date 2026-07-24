@@ -25,13 +25,14 @@ Flask 기반의 소형 중고거래 플랫폼입니다.
 
 ## 각각의 폴더 설명
 - Tiny-Second-hand-Shopping-Platform(V0)
-  -> 보안 문제 해결 전 버전(보고서 작성과정에서 발견한 보안문제와 보완과정을 기록, 검증하기 위해 남겨둠)
+  -> 보안 문제 해결 전 버전(보고서 작성과정에서 발견한 보안문제와 패치과정을 기록하기 위해 남겨둠)
 - Tiny-Second-hand-Shopping-Platform
   -> 보안 문제 해결 후 버전(보고서에서 작성한 보안 문제를 보완한 버전으로 이 또한 검증을 위해 남겨둠)
 - Tiny-Second-hand-Shopping-Platform(V2)
   -> 유지보수 이후 버전(내부 폴더에서 improved.md로 내용을 작성해 둠)
     - (1. 보안 문제 추가 해결),
-    - (2. 찜 기능 등 추가 및 기존 기능 개선),
+    - (2. 기존 관리자/필터링 기능 개선),
+    - (3. 상품 찜 기능, 메세지 읽음 표시 기능 추가)
 
 ## 로컬 실행 방법
 
@@ -45,7 +46,7 @@ cd /Tiny-Second-hand-Shopping-Platform/Tiny-Second-hand-Shopping-Platform(V0)
 ```bash
 cd /Tiny-Second-hand-Shopping-Platform/Tiny-Second-hand-Shopping-Platform
 ```
-- V2를 실행시키고 싶은 경우 
+- V2를 실행시키고 싶은 경우 (추천)
 ```bash
 cd /Tiny-Second-hand-Shopping-Platform/Tiny-Second-hand-Shopping-Platform(V2)
 ```
