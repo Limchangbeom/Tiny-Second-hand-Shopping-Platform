@@ -37,7 +37,7 @@ Flask 기반의 소형 중고거래 플랫폼입니다.
 
 ## Ubuntu VM + ngrok 실행 방법
 
-질문에서 언급한 VMware Ubuntu + ngrok 환경 기준 실행 절차입니다.
+VMware Ubuntu + ngrok 환경 기준 실행 절차입니다.
 
 ### 1) Ubuntu 패키지 설치
 
