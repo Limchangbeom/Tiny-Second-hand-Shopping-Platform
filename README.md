@@ -34,80 +34,6 @@ Flask 기반의 소형 중고거래 플랫폼입니다.
     - (2. 기존 관리자/필터링 기능 개선),
     - (3. 상품 찜 기능, 메세지 읽음 표시 기능 추가)
 
-실행방법은 로컬에서 실행하는 방법과 우분투에서 실행하는 방법을 준비했습니다.
-
-## 로컬 실행 방법
-
-0. ZIP으로 다운로드 후 압축해제, 실행시킬 버전의 폴더로 이동, cmd로 들어가기
- - python, pip 등이 제대로 설치되어 있어야 합니다.  
-
-1. Python 가상환경 생성
-
-```bash
-python -m venv .venv
-```
-
-2. 가상환경 활성화
-
-- Windows PowerShell
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-- Ubuntu / bash
-
-```bash
-source .venv/bin/activate
-```
-
-
-3. 의존성 설치
-
-```bash
-pip install -r requirements.txt
-```
-
-4. 환경 변수 설정
-
-`.env.example`를 참고해서 값을 준비합니다.
-
-필수 권장값:
-
-- `SECRET_KEY`: 충분히 긴 랜덤 문자열
-- `ADMIN_USERNAME`: 초기 관리자 아이디
-- `ADMIN_PASSWORD`: 초기 관리자 비밀번호
-
-예시:
-
-```bash
-export SECRET_KEY="replace-this-with-a-long-random-secret"
-export ADMIN_USERNAME="admin"
-export ADMIN_PASSWORD="ChangeMe123!"
-```
-
-Windows PowerShell 예시:
-
-```powershell
-$env:SECRET_KEY="replace-this-with-a-long-random-secret"
-$env:ADMIN_USERNAME="admin"
-$env:ADMIN_PASSWORD="ChangeMe123!"
-```
-
-5. 서버 실행
-
-```bash
-python run.py
-```
-
-6. 브라우저 접속
-
-```text
-http://127.0.0.1:5000
-```
-
-
-
 
 ## Ubuntu VM + ngrok 실행 방법
 
@@ -125,8 +51,9 @@ sudo apt install -y python3 python3-venv python3-pip git
 GitHub에 public 저장소를 올린 뒤 Ubuntu VM에서 클론합니다.
 
 ```bash
-git clone <YOUR_PUBLIC_GITHUB_REPOSITORY_URL>
-cd tiny-second-hand-shopping-platform
+git clone https://github.com/Limchangbeom/Tiny-Second-hand-Shopping-Platform.git
+cd Tiny-Second-hand-Shopping-Platform
+cd 'tiny-secon-hand-shopping-platform(V2)'
 ```
 
 ### 3) 가상환경 및 의존성 설치
