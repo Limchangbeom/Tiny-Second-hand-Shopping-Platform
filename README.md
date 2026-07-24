@@ -37,11 +37,12 @@ Flask 기반의 소형 중고거래 플랫폼입니다.
 ## 로컬에서 실행 방법
 
 실행하고자 하는 폴더에서 cmd창에 들어가서 
-python run.py를 입력해서 실행하면 됨
+python run.py를 입력해서 실행하면 됩니다.
 
 ## Ubuntu VM + ngrok 실행 방법
 
 VMware Ubuntu + ngrok 환경 기준 실행 절차입니다.
+(V2)를 기준으로 설명하겠습니다.
 
 ### 1) Ubuntu 패키지 설치
 
