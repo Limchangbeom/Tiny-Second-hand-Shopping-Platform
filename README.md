@@ -1,6 +1,6 @@
 # Tiny Second-hand Shopping Platform
 
-Flask 기반의 소형 중고거래 플랫폼입니다. 회원가입, 상품 등록/조회, 검색, 전체 채팅, 1대1 채팅, 신고 기반 차단, 사용자 간 송금, 관리자 통합 관리 기능을 포함합니다.
+Flask 기반의 소형 중고거래 플랫폼입니다. 
 
 ## 핵심 기능
 
@@ -23,18 +23,34 @@ Flask 기반의 소형 중고거래 플랫폼입니다. 회원가입, 상품 등
 - Flask-Limiter
 - SQLite
 
-## 프로젝트 구조
+## 각각의 폴더 설명
 - Tiny-Second-hand-Shopping-Platform(V0)
-  -> 보안 문제 해결 전 버전
+  -> 보안 문제 해결 전 버전(보고서 작성과정에서 발견한 보안문제와 보완과정을 기록, 검증하기 위해 남겨둠)
 - Tiny-Second-hand-Shopping-Platform
-  -> 보안 문제 해결 후 버전
+  -> 보안 문제 해결 후 버전(보고서에서 작성한 보안 문제를 보완한 버전으로 이 또한 검증을 위해 남겨둠)
 - Tiny-Second-hand-Shopping-Platform(V2)
-  -> 유지보수 이후 버전(보안 문제 추가 해결, improved.md에 내용 존재)
+  -> 유지보수 이후 버전(내부 폴더에서 improved.md로 내용을 작성해 둠)
+    - (1. 보안 문제 추가 해결),
+    - (2. 찜 기능 등 추가 및 기존 기능 개선),
 
 ## 로컬 실행 방법
-0. 3개의 폴더 중 실행 시킬 버전의 폴더로 cd로 이동.
 
-1. Python 가상환경 생성, 
+0. 실행시킬 버전의 폴더로 이동
+
+- V0를 실행시키고 싶은 경우
+```bash
+cd /Tiny-Second-hand-Shopping-Platform/Tiny-Second-hand-Shopping-Platform(V0)
+```
+- V0를 보완한 버전을 실행시키고 싶은 경우
+```bash
+cd /Tiny-Second-hand-Shopping-Platform/Tiny-Second-hand-Shopping-Platform
+```
+- V2를 실행시키고 싶은 경우 
+```bash
+cd /Tiny-Second-hand-Shopping-Platform/Tiny-Second-hand-Shopping-Platform(V2)
+```
+
+1. Python 가상환경 생성
 
 ```bash
 python -m venv .venv
